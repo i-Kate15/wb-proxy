@@ -12,7 +12,7 @@ app.post('/reportDetailByPeriod', async (req, res) => {
     const token = process.env.WB_API_KEY;
 
     const response = await axios.post(
-      'https://statistics-api.wildberries.ru/api/v1/supplier/reportDetailByPeriod',
+      'https://suppliers-api.wildberries.ru/api/v3/supplier/reportDetailByPeriod',
       { dateFrom, dateTo },
       {
         headers: {
@@ -30,5 +30,5 @@ app.post('/reportDetailByPeriod', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Proxy server with CORS running on port ${PORT}`);
+  console.log(`Proxy server running on port ${PORT}`);
 });
