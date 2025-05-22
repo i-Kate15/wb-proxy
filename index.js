@@ -1,46 +1,31 @@
-
 const express = require('express');
-const fetch = require('node-fetch');
-const cors = require('cors');
-
+const axios = require('axios');
 const app = express();
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Proxy server running on port ${PORT}`);
-});
-
-app.use(cors());
 app.use(express.json());
 
 app.post('/reportDetailByPeriod', async (req, res) => {
-  const { dateFrom, dateTo } = req.body;
-  const token = req.headers.authorization;
-
-  if (!token || !dateFrom || !dateTo) {
-    return res.status(400).json({ error: 'Missing parameters' });
-  }
-
   try {
-    const response = await fetch(`https://suppliers-api.wildberries.ru/api/v3/supplier/reportDetailByPeriod`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({ dateFrom, dateTo })
-    });
+    const { dateFrom, dateTo } = req.body;
+    const token = process.env.WB_API_KEY;
 
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const response = await axios.post(
+      'https://statistics-api.wildberries.ru/api/v1/supplier/reportDetailByPeriod',
+      { dateFrom, dateTo },
+      {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send(error.toString());
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('WB Proxy is running');
-});
-
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Proxy server running on port ${PORT}`);
 });
