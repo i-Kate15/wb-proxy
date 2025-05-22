@@ -1,6 +1,9 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
+
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.post('/reportDetailByPeriod', async (req, res) => {
@@ -27,5 +30,5 @@ app.post('/reportDetailByPeriod', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Proxy server running on port ${PORT}`);
+  console.log(`Proxy server with CORS running on port ${PORT}`);
 });
